@@ -3,10 +3,11 @@ import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import Checkbox from "./Checkbox";
 import Colors from "../constants/Colors";
+import { useTheme } from "react-native-paper";
+
 
 const EditableText = ({ isChecked, onChangeText, text,isNewItem }) => {
     const [isEditMode, setEditMode] = useState(isNewItem);
-    const { colors } = useTheme();
 
     return (
         <TouchableOpacity style={{ flex: 1 }} onPress={() => !isChecked && setEditMode(true)}>
@@ -34,6 +35,7 @@ const EditableText = ({ isChecked, onChangeText, text,isNewItem }) => {
     );
 }
 export default ({ text, isChecked, onChecked, onChangeText, onDelete,isNewItem }) => {
+    const { colors } = useTheme();
     return (
         <View style={styles.container}>
             <View style={{ flexDirection: "row", flex: 1 }}>

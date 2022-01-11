@@ -6,6 +6,9 @@ import LabeledInput from '../components/LabeledInput';
 import validator from "validator";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword  } from "firebase/auth";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useTheme } from '@react-navigation/native';
+import { color } from 'react-native-reanimated';
+
 
 const validateFields = (email, password) => {
     const isValid = {
@@ -40,10 +43,13 @@ const login = ( email,password) => {
       
     })
     .catch((error) => {
+        alert(error.message)
       console.log(error.message);
     });
 };
 export default () => {
+    const { colors } = useTheme();
+
     const [isCreateMode, setIsCreateMode] = useState(false);
     const [emailField, setEmailField] = useState({
         text: "",
@@ -59,11 +65,10 @@ export default () => {
     });
     return (
         <KeyboardAwareScrollView
-            contentContainerStyle={styles.container} 
-            enableOnAndroid = {true}
+            contentContainerStyle={[styles.container,{color:colors.background}]} 
             enableAutomaticScroll = {true}
             >
-            <Text style={styles.header}>Todo App</Text>
+            <Text style={[styles.header,{color:colors.text}]}>Todo App</Text>
             <View style={{ flex: 1 }}>
                 <LabeledInput
                     label="Email"
@@ -71,8 +76,9 @@ export default () => {
                     onChangeText={(text) => {
                         setEmailField({ text });
                     }}
+                    inputStyle = {{color:colors.text}}
                     errorMessage={emailField.errorMessage}
-                    labelStyle={styles.label}
+                    labelStyle={[styles.label,{color:colors.text}]}
                     autoCompleteType="email"
                 />
                 <LabeledInput
@@ -82,8 +88,9 @@ export default () => {
                     onChangeText={(text) => {
                         setPasswordField({ text });
                     }}
+                    inputStyle = {{color:colors.text}}
                     errorMessage={passwordField.errorMessage}
-                    labelStyle={styles.label}
+                    labelStyle={[styles.label,{color:colors.text}]}
                     autoCompleteType="password"
                 />
                 {isCreateMode && (
@@ -94,8 +101,9 @@ export default () => {
                         onChangeText={(text) => {
                             setPasswordReentryField({ text });
                         }}
+                        inputStyle = {{color:colors.text}}
                         errorMessage={passwordReentryField.errorMessage}
-                        labelStyle={styles.label}
+                        labelStyle={[styles.label,{color:colors.text}]}
 
                     />
                 )}
@@ -132,7 +140,7 @@ export default () => {
                         isCreateMode ? createAccount(emailField.text, passwordField.text) : login(emailField.text, passwordField.text);
                     }
                 }}
-                buttonStyle={{ backgroundColor: Colors.blue }}
+                buttonStyle={{ backgroundColor: Colors.blue, marginBottom:32 }}
             />
         </KeyboardAwareScrollView>
     );
@@ -141,18 +149,17 @@ export default () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
         justifyContent: "space-between",
         alignItems: "stretch"
     },
     label: {
         fontSize: 16,
         fontWeight: "bold",
-        color: Colors.black,
     },
     header: {
-        fontSize: 72,
-        color: Colors.black,
-        alignSelf: "center"
+        fontSize: 32,
+        alignSelf: "center",
+        paddingTop:32,
+        paddingBottom:32,
     }
 });

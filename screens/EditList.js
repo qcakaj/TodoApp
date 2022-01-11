@@ -25,8 +25,8 @@ export default ({ navigation, route }) => {
     return (
         <KeyboardAwareScrollView
          contentContainerStyle={styles.container}
-         behavior="padding"
-        >
+         resetScrollToCoords={{ x: 0, y: 0 }}  
+         scrollEnabled={false}    >
             <View>
                 <View style={{ flexDirection: "row" }}>
                     <Text style={styles.label}>List Name</Text>

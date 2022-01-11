@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from '@react-navigation/native';
 
 const ListButton = ({ title, color, onPress, onDelete, onOptions }) => {
     const { colors } = useTheme();
@@ -14,14 +14,14 @@ const ListButton = ({ title, color, onPress, onDelete, onOptions }) => {
             style={[styles.itemContainer, { backgroundColor: color }]}
             onPress={onPress}>
             <View>
-                <Text style={[styles.itemTitle,{color:colors.surface }]}> {title} </Text>
+                <Text style={[styles.itemTitle,{color:colors.text }]}> {title} </Text>
             </View>
             <View style={{ flexDirection: 'row' }}>
                 <TouchableOpacity onPress={onOptions} disallowInterruption={true}>
-                    <Ionicons name="options-outline" size={32} color={colors.background}></Ionicons>
+                    <Ionicons name="options-outline" size={32} color="white"></Ionicons>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={onDelete} disallowInterruption={true}>
-                    <Ionicons name="trash-outline" size={32} color={colors.background}></Ionicons>
+                    <Ionicons name="trash-outline" size={32} color="white"></Ionicons>
                 </TouchableOpacity>
             </View>
         </TouchableOpacity>
@@ -34,10 +34,10 @@ const renderAddListIcon = (navigation, addItemToLists) => {
     return (
         <View style={{ flexDirection: "row" }}>
             <TouchableOpacity onPress={() => { navigation.navigate("Edit", { saveChanges: addItemToLists }) }} >
-                <Ionicons name="add-outline" size={24} color={colors.backdrop} style={{ marginEnd: 12 }}></Ionicons>
+                <Ionicons name="add-outline" size={24} color={colors.text} style={{ marginEnd: 12 }}></Ionicons>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => { navigation.navigate("Settings") }} >
-                <Ionicons name="settings-outline" size={24} color={colors.backdrop} style={{ marginEnd: 12 }}></Ionicons>
+                <Ionicons name="settings-outline" size={24} color={colors.text} style={{ marginEnd: 12 }}></Ionicons>
             </TouchableOpacity>
         </View>
     );
