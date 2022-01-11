@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { Screens } from './Stacks/Screens';
+import { AuthScreens } from './Stacks/AuthScreens';
+import { MyDarkTheme, MyTheme } from './constants/AppThemes';
+import { auth } from './constants/firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useColorScheme } from 'react-native';
-import { Screens } from './Screens';
-import { AuthScreens } from './AuthScreens';
-import { MyDarkTheme, MyTheme } from './AppThemes';
-import { auth } from './firebaseConfig';
+
 
 
 

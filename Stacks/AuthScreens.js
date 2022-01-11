@@ -1,5 +1,5 @@
 import React from 'react';
-import Login from './screens/Login';
+import Login from '../screens/Login';
 import { useTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 

@@ -1,9 +1,9 @@
 import React from 'react';
-import Home from './screens/Home';
-import TodoList from './screens/TodoList';
-import EditList from './screens/EditList';
-import Colors from './constants/Colors';
-import Settings from './screens/Settings';
+import Home from '../screens/Home';
+import TodoList from '../screens/TodoList';
+import EditList from '../screens/EditList';
+import Colors from '../constants/Colors';
+import Settings from '../screens/Settings';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 export const Stack = createNativeStackNavigator();
