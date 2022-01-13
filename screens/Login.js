@@ -4,15 +4,10 @@ import Colors from '../constants/Colors';
 import Button from '../components/Button';
 import LabeledInput from '../components/LabeledInput';
 import validator from "validator";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, collection, getDocs,setDoc, doc } from 'firebase/firestore';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword  } from "firebase/auth";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useTheme } from '@react-navigation/native';
 import { color } from 'react-native-reanimated';
-import { db } from '../constants/firebaseConfig';
-import { useDispatch } from 'react-redux';
-import { setIsLoading } from '../store/actions';
-
 
 
 const validateFields = (email, password) => {
@@ -30,41 +25,30 @@ const validateFields = (email, password) => {
     return isValid
 }
 
-const createAccount = (email, password, dispatch) => {
-    dispatch(setIsLoading(true));
-    createUserWithEmailAndPassword(getAuth(), email, password)
-        .then(({ user }) => {
-            console.log("creating user");
-            // Add a new document in collection "users"
-             setDoc(doc(db, "users", user.uid), {})
-             dispatch(setIsLoading(false));
-
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorCode, errorMessage);
-            dispatch(setIsLoading(false));
-        });
+const createAccount = (email, password) => {
+   createUserWithEmailAndPassword(getAuth(),email,password)
+    .then(({user}) => {
+        console.log("creating user");
+    })
+    .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+         console.log(errorCode,errorMessage);
+      });
 
 };
-const login = (email, password, dispatch) => {
-    dispatch(setIsLoading(true));
+const login = ( email,password) => {
     signInWithEmailAndPassword(getAuth(), email, password)
-        .then((userCredential) => {
-            dispatch(setIsLoading(false));
-
-        })
-        .catch((error) => {
-            alert(error.message)
-            console.log(error.message);
-            dispatch(setIsLoading(false));
-
-        });
+    .then((userCredential) => {
+      
+    })
+    .catch((error) => {
+        alert(error.message)
+      console.log(error.message);
+    });
 };
 export default () => {
     const { colors } = useTheme();
-    const dispatch = useDispatch();
 
     const [isCreateMode, setIsCreateMode] = useState(false);
     const [emailField, setEmailField] = useState({
@@ -79,13 +63,12 @@ export default () => {
         text: "",
         errorMessage: ""
     });
-
     return (
         <KeyboardAwareScrollView
-            contentContainerStyle={[styles.container, { color: colors.background }]}
-            enableAutomaticScroll={true}
-        >
-            <Text style={[styles.header, { color: colors.text }]}>Todo App</Text>
+            contentContainerStyle={[styles.container,{color:colors.background}]} 
+            enableAutomaticScroll = {true}
+            >
+            <Text style={[styles.header,{color:colors.text}]}>Todo App</Text>
             <View style={{ flex: 1 }}>
                 <LabeledInput
                     label="Email"
@@ -93,9 +76,9 @@ export default () => {
                     onChangeText={(text) => {
                         setEmailField({ text });
                     }}
-                    inputStyle={{ color: colors.text }}
+                    inputStyle = {{color:colors.text}}
                     errorMessage={emailField.errorMessage}
-                    labelStyle={[styles.label, { color: colors.text }]}
+                    labelStyle={[styles.label,{color:colors.text}]}
                     autoCompleteType="email"
                 />
                 <LabeledInput
@@ -105,9 +88,9 @@ export default () => {
                     onChangeText={(text) => {
                         setPasswordField({ text });
                     }}
-                    inputStyle={{ color: colors.text }}
+                    inputStyle = {{color:colors.text}}
                     errorMessage={passwordField.errorMessage}
-                    labelStyle={[styles.label, { color: colors.text }]}
+                    labelStyle={[styles.label,{color:colors.text}]}
                     autoCompleteType="password"
                 />
                 {isCreateMode && (
@@ -118,9 +101,9 @@ export default () => {
                         onChangeText={(text) => {
                             setPasswordReentryField({ text });
                         }}
-                        inputStyle={{ color: colors.text }}
+                        inputStyle = {{color:colors.text}}
                         errorMessage={passwordReentryField.errorMessage}
-                        labelStyle={[styles.label, { color: colors.text }]}
+                        labelStyle={[styles.label,{color:colors.text}]}
 
                     />
                 )}
@@ -154,10 +137,10 @@ export default () => {
                         isAllValid = false;
                     }
                     if (isAllValid) {
-                        isCreateMode ? createAccount(emailField.text, passwordField.text , dispatch) : login(emailField.text, passwordField.text,dispatch);
+                        isCreateMode ? createAccount(emailField.text, passwordField.text) : login(emailField.text, passwordField.text);
                     }
                 }}
-                buttonStyle={{ backgroundColor: Colors.blue, marginBottom: 32 }}
+                buttonStyle={{ backgroundColor: Colors.blue, marginBottom:32 }}
             />
         </KeyboardAwareScrollView>
     );
@@ -176,7 +159,7 @@ const styles = StyleSheet.create({
     header: {
         fontSize: 32,
         alignSelf: "center",
-        paddingTop: 32,
-        paddingBottom: 32,
+        paddingTop:32,
+        paddingBottom:32,
     }
 });

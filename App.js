@@ -1,15 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { Store } from './store/store';
-import { Provider } from 'react-redux';
-import Navigator from './Navigator';
+import { NavigationContainer } from '@react-navigation/native';
+import { Screens } from './Stacks/Screens';
+import { AuthScreens } from './Stacks/AuthScreens';
+import { MyDarkTheme, MyTheme } from './constants/AppThemes';
+import { auth } from './constants/firebaseConfig';
+import { onAuthStateChanged } from 'firebase/auth';
+import { useColorScheme } from 'react-native';
+
+
 
 
 
 export default function App() {
+  const scheme = useColorScheme();
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
+
+  useEffect(() => {
+    if (auth.currentUser) {
+      setIsAuthenticated(true);
+    }
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+    })
+  }, []);
+
   return (
-    <Provider store={Store}>
-        <Navigator/>
-    </Provider>
+    <NavigationContainer theme={scheme === 'dark' ? MyDarkTheme : MyTheme}>
+      {isAuthenticated ? <Screens/> : <AuthScreens />}
+    </NavigationContainer>
   );
-}
+};
+
 

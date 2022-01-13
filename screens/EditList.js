@@ -1,4 +1,4 @@
-import { CommonActions, useTheme } from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, KeyboardAvoidingView } from 'react-native';
 import Colors from '../constants/Colors';
@@ -22,7 +22,6 @@ export default ({ navigation, route }) => {
     const [title, setTitle] = useState(route.params.title || "");
     const [color, setColor] = useState(route.params.color || Colors.blue);
     const [isValid, setValidity] = useState(true);
-    const { colors } =useTheme();
     return (
         <KeyboardAwareScrollView
          contentContainerStyle={styles.container}
@@ -30,7 +29,7 @@ export default ({ navigation, route }) => {
          scrollEnabled={false}    >
             <View>
                 <View style={{ flexDirection: "row" }}>
-                    <Text style={[styles.label,{color:colors.text}]}>List Name</Text>
+                    <Text style={styles.label}>List Name</Text>
                     {!isValid &&
                         <Text
                             style={{ color: Colors.red, fontSize: 12, marginLeft: 4 }}
@@ -46,9 +45,9 @@ export default ({ navigation, route }) => {
                     }}
                     placeholder={"New list name"}
                     maxLenth={30}
-                    style={[styles.input,{color:colors.text}]}
+                    style={styles.input}
                 />
-                <Text style={[styles.label,{color:colors.text}]}>Choose color</Text>
+                <Text style={styles.label}>Choose color</Text>
                 <ColorSelector
                     onSelect={(color) => {
                         console.log(color);

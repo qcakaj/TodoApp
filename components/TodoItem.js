@@ -3,12 +3,11 @@ import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import Checkbox from "./Checkbox";
 import Colors from "../constants/Colors";
-import { useTheme , Card} from "react-native-paper";
-import { color } from "react-native-reanimated";
+import { useTheme } from "react-native-paper";
 
 
-const EditableText = ({ isChecked, onChangeText, text, ...props}) => {
-    const [isEditMode, setEditMode] = useState(props.new);
+const EditableText = ({ isChecked, onChangeText, text,isNewItem }) => {
+    const [isEditMode, setEditMode] = useState(isNewItem);
 
     return (
         <TouchableOpacity style={{ flex: 1 }} onPress={() => !isChecked && setEditMode(true)}>
@@ -20,47 +19,39 @@ const EditableText = ({ isChecked, onChangeText, text, ...props}) => {
                     placeholder={"Add new item here"}
                     onSubmitEditing={() => { }}
                     maxLenth={30}
-                    onBlur={() => {
-                        props.onBlur && props.onBlur()
-                         setEditMode(false)
-                          }}
+                    onBlur={() => { setEditMode(false) }}
                     style={styles.input}
                 /> :
                 <Text style={styles.text,
                 {
                     color: isChecked ?
-                        Colors.black :
-                        "white",
+                        Colors.lightGray :
+                        Colors.black,
+                    textDecoration: isChecked ? "line-through" : "none"
                 }
                 }>{text}</Text>
             }
         </TouchableOpacity>
     );
 }
-export default ({ text, isChecked, onChecked, onChangeText, onDelete,...props }) => {
+export default ({ text, isChecked, onChecked, onChangeText, onDelete,isNewItem }) => {
     const { colors } = useTheme();
     return (
         <View style={styles.container}>
-        <Card style = {[styles.container,{backgroundColor:props.color,color: isChecked ? props.color : "white"}]}>
             <View style={{ flexDirection: "row", flex: 1 }}>
                 <Checkbox isChecked={isChecked} onChecked={onChecked} />
                 <EditableText
-                style = {{color: isChecked ? Colors.lightGray : "white"}}
                     text={text}
                     onChangeText={onChangeText}
+                    isNewItem={isNewItem}
                     isChecked={isChecked}
-                    {...props}
                 />
             </View>
-            
-                 <TouchableOpacity
-                 style= {{flex:1,alignItems:"center"}}
+            <TouchableOpacity
                 onPress={onDelete}>
              <Text style={[styles.icon,{color: Colors.red}]}>X</Text>
-            </TouchableOpacity> 
-        
-            </Card>
-         </View>
+            </TouchableOpacity>
+        </View>
     );
 }
 
@@ -87,7 +78,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     text: {
-        color: 'white',
         padding: 3,
         fontSize: 16,
     }
