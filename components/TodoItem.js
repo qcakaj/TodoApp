@@ -9,7 +9,6 @@ import { color } from "react-native-reanimated";
 
 const EditableText = ({ isChecked, onChangeText, text, ...props}) => {
     const [isEditMode, setEditMode] = useState(props.new);
-
     return (
         <TouchableOpacity style={{ flex: 1 }} onPress={() => !isChecked && setEditMode(true)}>
             {isEditMode ?

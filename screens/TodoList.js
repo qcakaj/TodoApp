@@ -1,10 +1,10 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React, { useState, useLayoutEffect, useEffect } from "react";
 import { StyleSheet } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
+import { FlatList, Swipeable } from "react-native-gesture-handler";
 import TodoItem from "../components/TodoItem";
 import { Ionicons } from '@expo/vector-icons';
-import { addDoc, collection, onSnapshot, setDoc, deleteDoc,doc } from "firebase/firestore";
+import { addDoc, collection, onSnapshot, setDoc, deleteDoc, doc } from "firebase/firestore";
 import { useTheme } from "react-native-paper";
 import { db } from "../constants/firebaseConfig";
 import { useSelector } from "react-redux";
@@ -14,8 +14,8 @@ import Colors from "../constants/Colors";
 
 
 
-const renderAddListIcon = (addItem,colors) => {
-    
+const renderAddListIcon = (addItem, colors) => {
+
     return (
 
         <TouchableOpacity onPress={() => addItem()} >
@@ -65,7 +65,7 @@ export default ({ navigation, route }) => {
 
     useLayoutEffect(() => {
         navigation.setOptions({
-            headerRight: () => renderAddListIcon(addItemToLists,colors)
+            headerRight: () => renderAddListIcon(addItemToLists, colors)
         });
     });
 
@@ -87,72 +87,90 @@ export default ({ navigation, route }) => {
                         }}><Text >Empty list</Text></View>
                     );
                 }}
-                renderItem={({ item: { id ,text, isChecked, ...params }, index }) => {
-                    return <TodoItem
-                        color= {isChecked ? Colors.lightGray : route.params.color}
-                        text={text}
-                        isChecked={isChecked}
-                        onChecked={() => {
-                            // const todoItem = todoItems[index];
-                            // todoItem.isChecked = !isChecked;
-                            // updateItem(index, todoItem);
-                             let data = {text, isChecked: !isChecked};
-                             if(id) {
-                                 data.id = id
-                             }
-                             setDoc(doc(db, "users", userUid, "lists", route.params.listId, "todoList",id),data).then(()=> {
-                                 console.log("Checked Item", data);
-                             })
+                renderItem={({ item: { id, text, isChecked, ...params }, index }) => {
+                    return <Swipeable
+                        onSwipeableLeftOpen={() => {
+                            console.log("swipe right");
+                        }}>
 
-                        }}
-                        onChangeText={(newText) => {
-                            // const todoItem = todoItems[index];
-                            // todoItem.text = newText;
-                            // updateItem(index, todoItem);
-                            if (params.new) {
-                                setNewItem({
-                                    text: newText,
-                                    isChecked,
-                                    new: params.new
-                                })
-                            } else {
-                                todoItems[index].text = newText;
-                                setTodoItems([...todoItems]);
-                            }
-                        }}
-                        onDelete={() => {
-                            params.new ? setNewItem(null) : removeItemFromLists(index);
-                            try {
-                                if(id) {
-                                deleteDoc(doc(db, "users", userUid, "lists", route.params.listId, "todoList" , id)).then(response => {
-                                console.log("removed");
-                            }).catch(error =>{
-                                console.log("ERRROORRR",error);
-                            });
-                            } 
-                            } catch(error) {
-                                console.log("CAERRROORRR",error);
-
-                            }
-                         
-                        }
-
-                        }
-                        onBlur={() => {
-                            if (text.length > 1) {
-                                let data = { text, isChecked }
+                        <TodoItem
+                            color={isChecked ? Colors.lightGray : route.params.color}
+                            text={text}
+                            {...params}
+                            isChecked={isChecked}
+                            onChecked={() => {
+                                // const todoItem = todoItems[index];
+                                // todoItem.isChecked = !isChecked;
+                                // updateItem(index, todoItem);
+                                let data = { text, isChecked: !isChecked };
                                 if (id) {
-                                    data.id = id;
+                                    data.id = id
                                 }
-                                addDoc(toDoListRef, data).then(() => {
-                                    console.log("added todo list");
-                                });
-                                params.new && setNewItem(null);
-                            } else {
-                                params.new ? setNewItem() : removeItemFromLists(index);
+                                setDoc(doc(db, "users", userUid, "lists", route.params.listId, "todoList", id), data).then(() => {
+                                    console.log("Checked Item", data);
+                                })
+
+                            }}
+                            onChangeText={(newText) => {
+                                // const todoItem = todoItems[index];
+                                // todoItem.text = newText;
+                                // updateItem(index, todoItem);
+                                if (params.new) {
+                                    setNewItem({
+                                        text: newText,
+                                        isChecked,
+                                        new: params.new
+                                    })
+                                } else {
+                                    todoItems[index].text = newText;
+                                    setTodoItems([...todoItems]);
+                                }
+                            }}
+                            onDelete={() => {
+                                params.new ? setNewItem(null) : removeItemFromLists(index);
+                                try {
+                                    if (id) {
+                                        deleteDoc(doc(db, "users", userUid, "lists", route.params.listId, "todoList", id)).then(response => {
+                                            console.log("removed");
+                                        }).catch(error => {
+                                            console.log("ERRROORRR", error);
+                                        });
+                                    }
+                                } catch (error) {
+                                    console.log("CAERRROORRR", error);
+                                }
                             }
-                        }}
-                    />
+                            }
+                            onBlur={() => {
+
+
+                                if (text.length > 1) {
+                                    if (newItem) {
+
+                                        let tempItems = todoItems
+                                        tempItems.splice(0, 1)
+
+                                        let has = tempItems.some(item => item.text == newItem.text && item.isChecked == newItem.isChecked);
+                                        if (has) {
+                                            alert("You already have this task.");
+                                            removeItemFromLists(index);
+                                        } else {
+                                            let data = { text, isChecked }
+                                            if (id) {
+                                                data.id = id;
+                                            }
+                                            addDoc(toDoListRef, data).then(() => {
+                                            });
+                                            params.new && setNewItem(null);
+                                        }
+                                    }
+
+                                } else {
+                                    params.new ? setNewItem() : removeItemFromLists(index);
+                                }
+                            }}
+
+                        /></Swipeable>
                 }} />
         </View>
     );
