@@ -4,6 +4,8 @@ import Colors from '../constants/Colors';
 import Button from '../components/Button';
 import { getAuth, signOut } from 'firebase/auth';
 import { View } from 'react-native';
+import { setIsLoading } from '../store/actions';
+import { useDispatch } from 'react-redux';
 
 const colorList = [
     "blue",
@@ -18,16 +20,19 @@ const colorList = [
     "blueGray"
 ];
 export default ({ navigation, route }) => {
+    const dispatch = useDispatch();
+
     return (
         <View style={{ flex: 1 }}>
             <Button
                 text="Log out"
                 buttonStyle={{ backgroundColor: Colors.blueGray }}
                 onPress={() => {
+                    dispatch(setIsLoading(true))
                     signOut(getAuth()).then(() => {
-                        // Sign-out successful.
+                        dispatch(setIsLoading(false))
                     }).catch((error) => {
-                        // An error happened.
+                        dispatch(setIsLoading(false))
                     });
                 }}
             />
